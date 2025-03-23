@@ -1,0 +1,62 @@
+name: MLflow Test and Promote
+
+on:
+  workflow_dispatch:  # manual trigger, or change to push if needed
+
+jobs:
+  test-model:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    env:
+      MLFLOW_USERNAME: ${{ secrets.MLFLOW_USERNAME }}
+      MLFLOW_PASSWORD: ${{ secrets.MLFLOW_PASSWORD }}
+      MLFLOW_TRACKING_HOST: ${{ secrets.MLFLOW_TRACKING_HOST }}
+      MODEL_NAME: ${{ secrets.MODEL_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run MLflow model load test
+        run: python manage.py test prediction
+
+  promote-model:
+    name: Promote Model to Production
+    needs: test-model
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    env:
+      MLFLOW_USERNAME: ${{ secrets.MLFLOW_USERNAME }}
+      MLFLOW_PASSWORD: ${{ secrets.MLFLOW_PASSWORD }}
+      MLFLOW_TRACKING_HOST: ${{ secrets.MLFLOW_TRACKING_HOST }}
+      MODEL_NAME: ${{ secrets.MODEL_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install MLflow + dotenv
+        run: pip install python-dotenv mlflow
+
+      - name: Promote model to Production
+        run: python prediction/transition.py
