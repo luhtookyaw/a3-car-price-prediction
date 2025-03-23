@@ -67,7 +67,10 @@ jobs:
         with:
           # Your image name
           images: ${{ secrets.DOCKERHUB_USERNAME }}/car_price_app
-          tags: type=semver,pattern={{raw}}
+          tags: |
+            type=sha
+            type=semver,pattern={{raw}}
+            latest
 
       - name: Build and push
         uses: docker/build-push-action@v5
