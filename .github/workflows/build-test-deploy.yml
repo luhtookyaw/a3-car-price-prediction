@@ -78,7 +78,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
     
   deploy:
-    needs: build-test
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: SSH Remote Commands
