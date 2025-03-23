@@ -75,7 +75,7 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/car-price-app:a3
     
   deploy:
     needs: build-test
