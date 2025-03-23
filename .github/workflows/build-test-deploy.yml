@@ -67,10 +67,7 @@ jobs:
         with:
           # Your image name
           images: ${{ secrets.DOCKERHUB_USERNAME }}/car_price_app
-          tags: |
-            type=sha
-            type=semver,pattern={{raw}}
-            latest
+          tags: a3
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -94,5 +91,5 @@ jobs:
           proxy_username: ${{ secrets.USERNAME }}
           proxy_key: ${{ secrets.KEY }}
           script: |
-            tag=${{ github.ref_name }} docker compose -f st124956/docker-compose.yml down
-            tag=${{ github.ref_name }} docker compose -f st124956/docker-compose.yml up -d
+            tag=a3 docker compose -f st124956/docker-compose.yml down
+            tag=a3 docker compose -f st124956/docker-compose.yml up -d
