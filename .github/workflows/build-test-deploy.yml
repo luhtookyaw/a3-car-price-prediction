@@ -67,7 +67,8 @@ jobs:
         with:
           # Your image name
           images: ${{ secrets.DOCKERHUB_USERNAME }}/car_price_app
-          tags: a3
+          tags: |
+            type=raw,value=a3
 
       - name: Build and push
         uses: docker/build-push-action@v5
